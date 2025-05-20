@@ -1,0 +1,13 @@
+.current-weather{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    height: 20%;
+}
+.current-weather > *{
+    color: #e0dddd;
+}
+.celsius{
+    font-size: 40px
+}
