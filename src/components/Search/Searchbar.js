@@ -20,7 +20,7 @@ const Searchbar = ({ onHandleChange }) => {
         return {
           options: response.data.map((city) => ({
             value: `${city.latitude} ${city.longitude}`,
-            label: `${city.name}, ${city.countryCode}`,
+            label: `${city.name}`,
           })),
         };
       });

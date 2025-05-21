@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Searchbar from "./components/Search/Searchbar";
-import LoopCloud from "./Assets/Cloud.mp4";
+import cloud1 from "./Assets/cloud1.mp4";
 import "./Styles/App.css";
 import {
   StyledCard,
@@ -16,13 +17,16 @@ import { API_KEY, weather_Api, forcast_Api, big_Data_Api } from "./Api/Api";
 import HourForcast from "./components/HourForcast/HourForcast";
 import DaysForcast from "./components/DaysForcast/DaysForcast";
 import SplashScreen from "./components/SplashScreen/SplashScreen";
+import WeatherInsights from "./components/WeatherInsights/WeatherInsights";
+import LandingPage from "./components/LandingPage";
 
-const App = () => {
+const WeatherApp = () => {
   const [currentWeather, setCurrentWeather] = useState(null);
   const [weatherForcast, setWeatherFocast] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [showSplash, setShowSplash] = useState(true);
+  const [locationPrompt, setLocationPrompt] = useState(false);
 
   useEffect(() => {
     defaultLoc();
@@ -36,9 +40,11 @@ const App = () => {
   const defaultLoc = () => {
     setLoading(true);
     setError(null);
+    setLocationPrompt(true);
     
     navigator.geolocation.getCurrentPosition(
       (position) => {
+        setLocationPrompt(false);
         const geoLat = position.coords.latitude;
         const geoLon = position.coords.longitude;
 
@@ -89,6 +95,7 @@ const App = () => {
           .catch(handleError);
       },
       (error) => {
+        setLocationPrompt(false);
         handleError(new Error("Please enable location services to get weather for your area"));
       }
     );
@@ -148,12 +155,18 @@ const App = () => {
   return (
     <Wrapper>
       <VideoBG autoPlay muted loop playsInline>
-        <source src={LoopCloud} type="video/mp4" />
+        <source src={cloud1} type="video/mp4" />
       </VideoBG>
       <AppUI>
         <Upper>
           <Searchbar onHandleChange={searchChange} />
         </Upper>
+        
+        {locationPrompt && (
+          <ErrorMessage style={{ background: 'rgba(255, 255, 255, 0.1)', color: 'rgba(255, 255, 255, 0.9)' }}>
+            My Location
+          </ErrorMessage>
+        )}
         
         {error && <ErrorMessage>{error}</ErrorMessage>}
         
@@ -168,10 +181,27 @@ const App = () => {
             <StyledCard>
               {weatherForcast && <DaysForcast data={weatherForcast} />}
             </StyledCard>
+            {currentWeather && weatherForcast && (
+              <WeatherInsights 
+                currentWeather={currentWeather} 
+                forecast={weatherForcast} 
+              />
+            )}
           </>
         )}
       </AppUI>
     </Wrapper>
+  );
+};
+
+const App = () => {
+  return (
+    <Router>
+      <Routes>
+        <Route path="/" element={<LandingPage />} />
+        <Route path="/weather" element={<WeatherApp />} />
+      </Routes>
+    </Router>
   );
 };
 

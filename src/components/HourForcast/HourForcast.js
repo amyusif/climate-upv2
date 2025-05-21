@@ -5,10 +5,9 @@ const HourlyContainer = styled.div`
   display: flex;
   overflow-x: auto;
   gap: 1.5rem;
-  padding: 1.5rem;
+  padding: 0 1.5rem 1.5rem 1.5rem;
   scrollbar-width: thin;
   scrollbar-color: rgba(255, 255, 255, 0.3) transparent;
-  justify-content: center;
   align-items: center;
   
   &::-webkit-scrollbar {
@@ -25,68 +24,62 @@ const HourlyContainer = styled.div`
   }
 
   @media (max-width: 768px) {
-    justify-content: flex-start;
-    padding: 1rem;
+    padding: 0 1rem 1rem 1rem;
     gap: 1rem;
   }
 `;
 
 const HourlyItem = styled.div`
-  min-width: 120px;
-  padding: 1.25rem;
-  background: rgba(255, 255, 255, 0.05);
-  border-radius: 12px;
+  min-width: 80px;
+  padding: 0.5rem;
   text-align: center;
-  transition: all 0.3s ease;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   flex: 0 0 auto;
-  
-  &:hover {
-    background: rgba(255, 255, 255, 0.1);
-    transform: translateY(-2px);
-  }
-
-  @media (max-width: 768px) {
-    min-width: 100px;
-    padding: 1rem;
-  }
 `;
 
 const Time = styled.div`
-  font-size: 1rem;
+  font-size: 0.9rem;
   color: rgba(255, 255, 255, 0.8);
-  margin-bottom: 0.75rem;
+  margin-bottom: 0.5rem;
   font-weight: 500;
 `;
 
 const Temp = styled.div`
-  font-size: 1.3rem;
+  font-size: 1.1rem;
   font-weight: bold;
   color: rgba(255, 255, 255, 0.9);
-  margin: 0.75rem 0;
+  margin-top: 0.5rem;
 `;
 
 const WeatherIcon = styled.div`
-  font-size: 1.75rem;
-  margin: 0.75rem 0;
-`;
-
-const HourlyWrapper = styled.div`
-  width: 100%;
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 1rem;
+  font-size: 1.5rem;
 `;
 
 const HourlyTitle = styled.h3`
-  text-align: center;
   color: rgba(255, 255, 255, 0.9);
   margin-bottom: 1rem;
   font-size: 1.2rem;
   font-weight: 500;
+  padding: 0 1.5rem;
+
+  @media (max-width: 768px) {
+    padding: 0 1rem;
+  }
+`;
+
+const DescriptionText = styled.div`
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 1rem;
+  margin-bottom: 1.5rem;
+  padding: 0 1.5rem;
+
+  @media (max-width: 768px) {
+    padding: 0 1rem;
+    margin-bottom: 1rem;
+  }
 `;
 
 const getWeatherIcon = (weatherCode) => {
@@ -113,25 +106,40 @@ const getWeatherIcon = (weatherCode) => {
   return icons[weatherCode] || "❓";
 };
 
-const HourForcast = ({ data }) => {
+const HourForcast = ({ data, sunriseSunset }) => {
   // Get only the next 24 hours of forecast
   const next24Hours = data.slice(0, 8);
 
+  // Find sunset time
+  const sunsetTime = sunriseSunset ? new Date(sunriseSunset.sunset * 1000).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' }).replace(' ', '') : null;
+
+  const formattedForecast = next24Hours.map((item, index) => {
+    const itemTime = new Date(item.dt * 1000).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' }).replace(' ', '');
+    const isSunset = sunsetTime && itemTime === sunsetTime;
+
+    return {
+      time: index === 0 ? "Now" : item.time,
+      icon: isSunset ? "🌅" : getWeatherIcon(item.weather[0].icon),
+      temp: isSunset ? "Sunset" : `${Math.round(item.main.temp)}°`, // Changed to match image format
+      isSunset,
+    };
+  });
+
   return (
-    <HourlyWrapper>
-      <HourlyTitle>Hourly Forecast</HourlyTitle>
+    <>
+      {/* Add descriptive text here - placeholder for now */}
+      <DescriptionText>Weather conditions and wind gusts forecast.</DescriptionText>
+      {/* <HourlyTitle>Hourly Forecast</HourlyTitle> */}
       <HourlyContainer>
-        {next24Hours.map((item, index) => (
+        {formattedForecast.map((item, index) => (
           <HourlyItem key={index}>
             <Time>{item.time}</Time>
-            <WeatherIcon>
-              {getWeatherIcon(item.weather[0].icon)}
-            </WeatherIcon>
-            <Temp>{Math.round(item.main.temp)}°C</Temp>
+            <WeatherIcon>{item.icon}</WeatherIcon>
+            <Temp>{item.temp}</Temp>
           </HourlyItem>
         ))}
       </HourlyContainer>
-    </HourlyWrapper>
+    </>
   );
 };
 

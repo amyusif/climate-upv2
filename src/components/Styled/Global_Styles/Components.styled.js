@@ -43,7 +43,6 @@ export const VideoBG = styled.video`
   z-index: -1;
   transform: translate(-50%, -50%);
   object-fit: cover;
-  filter: brightness(0.8);
 `;
 
 export const Wrapper = styled.div`

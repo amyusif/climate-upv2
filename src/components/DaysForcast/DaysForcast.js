@@ -84,6 +84,14 @@ const getWeatherIcon = (weatherCode) => {
 
 const formatDate = (dateStr) => {
   const date = new Date(dateStr);
+  const today = new Date();
+  
+  // Check if the date is today
+  if (date.toDateString() === today.toDateString()) {
+    return "Today";
+  }
+  
+  // For other days, return the weekday name
   return date.toLocaleDateString('en-US', { weekday: 'long' });
 };
 
