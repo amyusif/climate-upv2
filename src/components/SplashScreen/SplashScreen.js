@@ -28,7 +28,7 @@ const SplashContainer = styled.div`
   left: 0;
   width: 100%;
   height: 100vh;
-  background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
+  background: linear-gradient(135deg, #1e90ff, #87ceeb, #b0e0e6);
   display: flex;
   flex-direction: column;
   justify-content: center;

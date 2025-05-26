@@ -118,10 +118,10 @@ const WeatherPhoneSVG = ({ city = 'Kumasi, GH', temperature = '72\u00b0' }) => {
           {city}
         </text>
       
-        {/* Temperature display with improved styling - moved up */}
+        {/* Temperature display with improved styling - adjusted position */}
         <text 
           x="150" 
-          y="380" 
+          y="416" 
           fontFamily="Arial, sans-serif" 
           fontSize="86" 
           fontWeight="bold" 
@@ -132,8 +132,8 @@ const WeatherPhoneSVG = ({ city = 'Kumasi, GH', temperature = '72\u00b0' }) => {
           {temperature}
         </text>
       
-        {/* Weather icon (sun) with pulse animation - moved up with temperature */}
-        <g transform="translate(150, 440)" fill="#FFB74D" filter="url(#iconGlow)">
+        {/* Weather icon (sun) with pulse animation - properly positioned below temperature */}
+        <g transform="translate(150, 476)" fill="#FFB74D" filter="url(#iconGlow)">
           <circle cx="0" cy="0" r="18">
             <animate 
               attributeName="r" 

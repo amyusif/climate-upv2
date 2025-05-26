@@ -19,6 +19,7 @@ import DaysForcast from "./components/DaysForcast/DaysForcast";
 import SplashScreen from "./components/SplashScreen/SplashScreen";
 import WeatherInsights from "./components/WeatherInsights/WeatherInsights";
 import LandingPage from "./components/LandingPage";
+import ExportData from "./components/ExportData/ExportData";
 
 const WeatherApp = () => {
   const [currentWeather, setCurrentWeather] = useState(null);
@@ -159,7 +160,27 @@ const WeatherApp = () => {
       </VideoBG>
       <AppUI>
         <Upper>
-          <Searchbar onHandleChange={searchChange} />
+          <div style={{ 
+            display: 'flex', 
+            gap: '1rem', 
+            width: '100%', 
+            maxWidth: '1000px', 
+            margin: '0 auto',
+            justifyContent: 'space-between',
+            alignItems: 'center'
+          }}>
+            <div style={{ flex: '1 1 80%' }}>
+              <Searchbar onHandleChange={searchChange} />
+            </div>
+            {currentWeather && weatherForcast && (
+              <div style={{ flex: '0 0 auto' }}>
+                <ExportData 
+                  currentWeather={currentWeather}
+                  forecast={weatherForcast}
+                />
+              </div>
+            )}
+          </div>
         </Upper>
         
         {locationPrompt && (
